@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "816692589903",
+    "project_id": "bgm-elearningplatform-2bb9e",
+    "storage_bucket": "bgm-elearningplatform-2bb9e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816692589903:android:6d82ad0b1da3d5e3b0c13a",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoHbJa7BGNlOjkWiO24jyw8VRtPVflA9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
