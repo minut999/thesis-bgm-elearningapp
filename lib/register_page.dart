@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'sign_in_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -9,9 +11,10 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController();
 
   @override
   void dispose() {
@@ -43,6 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const Text('Email'),
               TextFormField(
+                controller: _emailController,
                 decoration: const InputDecoration(hintText: 'Enter your email'),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) =>
@@ -52,11 +56,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const Text('Mobile Number'),
               TextFormField(
-                decoration: const InputDecoration(hintText: 'Enter your mobile number'),
-                keyboardType: TextInputType.phone,
-                validator: (value) =>
-                    value!.isEmpty ? 'Mobile number is required' : null,
-              ),
+  controller: _mobileController,
+  decoration: const InputDecoration(hintText: 'Enter your mobile number'),
+  keyboardType: TextInputType.phone,
+  validator: (value) =>
+      value!.isEmpty ? 'Mobile number is required' : null,
+),
               const SizedBox(height: 16),
 
               const Text('Password'),
@@ -85,13 +90,44 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 32),
 
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Registering user...')),
-                    );
-                  }
-                },
+              onPressed: () async {
+  if (_formKey.currentState!.validate()) {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration successful! Redirecting...')),
+      );
+
+      // Wait then redirect to Sign In page
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SignInPage()),
+        );
+      });
+    } on FirebaseAuthException catch (e) {
+      String errorMsg;
+      if (e.code == 'email-already-in-use') {
+        errorMsg = 'This email is already in use.';
+      } else if (e.code == 'weak-password') {
+        errorMsg = 'Password should be at least 6 characters.';
+      } else {
+        errorMsg = 'Registration failed. ${e.message}';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMsg)),
+      );
+    }
+  }
+},
                 child: const Text('Submit'),
               ),
             ],
