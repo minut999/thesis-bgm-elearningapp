@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:flutter_application_1/register_page.dart';
+import 'sign_in_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MainApp());
 }
 
@@ -10,9 +20,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Nigga Website',
+      title: 'FinGuard Academy',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Arial',
       ),
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
@@ -26,26 +37,50 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Financial E-Learning Web Demo'),
-        centerTitle: true,
-      ),
+      backgroundColor: const Color(0xFFFAF4F8), // light pink background
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Welcome mga niggas!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'FinGuard Academy',
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Button clicked!')),
-                )
-              },
-              child: const Text('Click Me'),
+            const SizedBox(height: 10),
+            const Text(
+              'Your Path to Financial Literacy Starts With Us',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: const Text("Register"),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SignInPage()),
+    );
+  },
+  child: const Text("Sign In"),
+),
+              ],
             ),
           ],
         ),
